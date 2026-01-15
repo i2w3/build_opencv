@@ -6,7 +6,7 @@
 ```bash
 mamba create -n cucv python=3.12 numpy gstreamer gst-plugins-bad gst-plugins-base gst-plugins-good gst-plugins-ugly gst-rtsp-server cuda-toolkit cudnn cuda-version=12.8 -c nvidia
 mamba activate cucv
-# 注意添加 CUDA_HOME = CONDA_PREFIX，保证能找到 CUDA + CUDNN
+# 注意添加 CUDA_HOME = ${CONDA_PREFIX}/Library，保证能找到 CUDA + CUDNN
 ```
 
 # configure
