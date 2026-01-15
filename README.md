@@ -4,8 +4,9 @@
 # how to use
 根据平台查看 `configure.ps1/.sh` 中的代码，默认安装的是 `opencv-4.12.0`，默认已下载 [Video_Codec_SDK_*.zip](https://developer.nvidia.com/video-codec-sdk/download)，随后配置一下虚拟环境，注意编译期间要保持在终端在虚拟环境中：
 ```bash
-mamba create -n cucv python=3.12 numpy gstreamer gst-plugins-bad gst-plugins-base gst-plugins-good gst-plugins-ugly gst-rtsp-server
+mamba create -n cucv python=3.12 numpy gstreamer gst-plugins-bad gst-plugins-base gst-plugins-good gst-plugins-ugly gst-rtsp-server cuda-toolkit cudnn cuda-version=12.8 -c nvidia
 mamba activate cucv
+# 注意添加 CUDA_HOME = CONDA_PREFIX，保证能找到 CUDA + CUDNN
 ```
 
 # configure
