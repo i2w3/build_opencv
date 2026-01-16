@@ -4,40 +4,49 @@
 # UTF-8 编码
 chcp 65001 > $null
 
-# 设置代理
-$env:HTTP_PROXY='http://127.0.0.1:7890'
-$env:HTTPS_PROXY='http://127.0.0.1:7890'
-
 # 定义 opencv 版本
-$opencv_version = "4.12.0"
-if (-not (Test-Path "opencv-$opencv_version.zip")) {
-    Write-Host "Downloading OpenCV-$opencv_version..."
-    wget https://gh-proxy.org/https://github.com/opencv/opencv/archive/$opencv_version.zip -OutFile opencv-$opencv_version.zip
+$OPENCV_VERSION = "4.12.0"
+
+# 设置代理
+$env:HTTP_PROXY = "http://127.0.0.1:7890"
+$env:HTTPS_PROXY = "http://127.0.0.1:7890"
+# 设置 CUDA、CUDNN 路径
+$env:CUDA_HOME = ($Env:CONDA_PREFIX).Replace('\', '/') + "/Library"
+$env:CUDA_PATH = ($Env:CONDA_PREFIX).Replace('\', '/') + "/Library"
+# 设置 python 路径
+$PYTHON_PATH = ($Env:CONDA_PREFIX).Replace('\', '/')
+$INSTALL_PATH = ($Env:CONDA_PREFIX).Replace('\', '/')
+
+# 下载 opencv 和 opencv_contrib
+if (-not (Test-Path "opencv-$OPENCV_VERSION.zip")) {
+    Write-Host "Downloading OpenCV-$OPENCV_VERSION..."
+    wget https://gh-proxy.org/https://github.com/opencv/opencv/archive/$OPENCV_VERSION.zip -OutFile opencv-$OPENCV_VERSION.zip
+}
+if (-not (Test-Path "opencv_contrib-$OPENCV_VERSION.zip")) {
+    Write-Host "Downloading OpenCV Contrib-$OPENCV_VERSION..."
+    wget https://gh-proxy.org/https://github.com/opencv/opencv_contrib/archive/$OPENCV_VERSION.zip -OutFile opencv_contrib-$OPENCV_VERSION.zip
 }
 
-if (-not (Test-Path "opencv_contrib-$opencv_version.zip")) {
-    Write-Host "Downloading OpenCV Contrib-$opencv_version..."
-    wget https://gh-proxy.org/https://github.com/opencv/opencv_contrib/archive/$opencv_version.zip -OutFile opencv_contrib-$opencv_version.zip
+# 解压 opencv 和 opencv_contrib
+if (-not (Test-Path "opencv_contrib-$OPENCV_VERSION")) {
+    Expand-Archive -Path "opencv-$OPENCV_VERSION.zip" -DestinationPath .
 }
-
-# 定义 python 路径
-$python_path = $Env:CONDA_PREFIX
-$install_path = $Env:CONDA_PREFIX
-
-# 解压
-Expand-Archive -Path "opencv-$opencv_version.zip" -DestinationPath . -Force
-Expand-Archive -Path "opencv_contrib-$opencv_version.zip" -DestinationPath . -Force
+if (-not (Test-Path "opencv_contrib-$OPENCV_VERSION")) {
+    Expand-Archive -Path "opencv_contrib-$OPENCV_VERSION.zip" -DestinationPath .
+}
 
 # 配置 cmake
-cd opencv-$opencv_version
+cd opencv-$OPENCV_VERSION
 cmake -S . -G Ninja -B "_build" `
-      -DCMAKE_INSTALL_PREFIX="$install_path/Library" `
+      -DCMAKE_INSTALL_PREFIX="$INSTALL_PATH/Library" `
+      -DCMAKE_CXX_FLAGS="-I$INSTALL_PATH/Library/include/targets/x64" ` # “nv/target”
+      -DCMAKE_CUDA_FLAGS="-I$INSTALL_PATH/Library/include/targets/x64" `
       -DCMAKE_BUILD_TYPE=Release `
       -DWITH_CUDA=ON `
       -DWITH_CUDNN=ON `
       -DWITH_CUBLAS=ON `
       -DOPENCV_DNN_CUDA=ON `
-      -DOPENCV_EXTRA_MODULES_PATH="../opencv_contrib-$opencv_version/modules" `
+      -DOPENCV_EXTRA_MODULES_PATH="../opencv_contrib-$OPENCV_VERSION/modules" `
       -DOPENCV_ENABLE_NONFREE=ON `
       -DWITH_GSTREAMER=ON `
       -DBUILD_opencv_python2=OFF `
@@ -45,11 +54,11 @@ cmake -S . -G Ninja -B "_build" `
       -DBUILD_opencv_python_bindings_generator=ON `
       -DBUILD_PYTHON3_VERSION=ON `
       -DBUILD_FORCE_PYTHON_LIBS=ON `
-      -DPYTHON3_INCLUDE_DIR="$python_path/include" `
-      -DPYTHON3_LIBRARY="$python_path/libs/python312.lib" `
-      -DPYTHON3_EXECUTABLE="$python_path/python.exe" `
-      -DPYTHON3_NUMPY_INCLUDE_DIRS="$python_path/Lib/site-packages/numpy/_core/include" `
-      -DPYTHON3_PACKAGES_PATH="$python_path/Lib/site-packages" `
+      -DPYTHON3_INCLUDE_DIR="$PYTHON_PATH/include" `
+      -DPYTHON3_LIBRARY="$PYTHON_PATH/libs/python312.lib" `
+      -DPYTHON3_EXECUTABLE="$PYTHON_PATH/python.exe" `
+      -DPYTHON3_NUMPY_INCLUDE_DIRS="$PYTHON_PATH/Lib/site-packages/numpy/_core/include" `
+      -DPYTHON3_PACKAGES_PATH="$PYTHON_PATH/Lib/site-packages" `
       -DBUILD_TESTS=OFF `
       -DBUILD_PERF_TESTS=OFF `
       -DBUILD_EXAMPLES=OFF

@@ -2,11 +2,10 @@
 用于从源码编译 **OpenCV 4.12.0** 的构建项目。官方提供的 `pip install opencv-python` 通常不包含 CUDA 支持，且 GStreamer 功能有限。
 
 # how to use
-根据平台查看 `configure.ps1/.sh` 中的代码，默认安装的是 `opencv-4.12.0`，默认已下载 [Video_Codec_SDK_*.zip](https://developer.nvidia.com/video-codec-sdk/download)，随后配置一下虚拟环境，注意编译期间要保持在终端在虚拟环境中：
+根据平台查看 `configure.ps1/.sh` 中的代码，默认安装的是 `python3.12 + opencv-4.12.0`，需要已下载 [Video_Codec_SDK_*.zip](https://developer.nvidia.com/video-codec-sdk/download)，放到 `CUDA_HOME = ${CONDA_PREFIX}/Library`，随后配置一下虚拟环境，注意编译期间要保持在终端在虚拟环境中：
 ```bash
-mamba create -n cucv python=3.12 numpy gstreamer gst-plugins-bad gst-plugins-base gst-plugins-good gst-plugins-ugly gst-rtsp-server cuda-toolkit cudnn cuda-version=12.8 -c nvidia
+mamba create -n cucv python=3.12 numpy gstreamer gst-plugins-bad gst-plugins-base gst-plugins-good gst-plugins-ugly gst-rtsp-server ffmepg cuda-toolkit cudnn cuda-version=12.8 -c nvidia
 mamba activate cucv
-# 注意添加 CUDA_HOME = ${CONDA_PREFIX}/Library，保证能找到 CUDA + CUDNN
 ```
 
 # configure
@@ -18,14 +17,14 @@ mamba activate cucv
 4. 检查 `OpenCV modules` 中 `To be built` 的模块，再查看 [build](#build)
 ```powershell
 -- General configuration for OpenCV 4.12.0 =====================================
---   Version control:               unknown
+--   Version control:               82b1b5f-dirty
 --
 --   Extra modules:
 --     Location (extra):            D:/code/OpenCV/opencv_contrib-4.12.0/modules
---     Version control (extra):     unknown
+--     Version control (extra):     82b1b5f-dirty
 --
 --   Platform:
---     Timestamp:                   2026-01-13T06:31:18Z
+--     Timestamp:                   2026-01-16T07:30:03Z
 --     Host:                        Windows 10.0.26200 AMD64
 --     CMake:                       4.1.0
 --     CMake generator:             Ninja
@@ -49,8 +48,8 @@ mamba activate cucv
 --     Built as dynamic libs?:      YES
 --     C++ standard:                11
 --     C++ Compiler:                C:/Softwares/Microsoft/Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe  (ver 19.44.35222.0)
---     C++ flags (Release):         /DWIN32 /D_WINDOWS /W4 /GR  /D _CRT_SECURE_NO_DEPRECATE /D _CRT_NONSTDC_NO_DEPRECATE /D _SCL_SECURE_NO_WARNINGS /Gy /bigobj /Oi  /fp:precise /FS    /EHa /wd4127 /wd4251 /wd4324 /wd4275 /wd4512 /wd4589 /wd4819  /O2 /Ob2 /DNDEBUG
---     C++ flags (Debug):           /DWIN32 /D_WINDOWS /W4 /GR  /D _CRT_SECURE_NO_DEPRECATE /D _CRT_NONSTDC_NO_DEPRECATE /D _SCL_SECURE_NO_WARNINGS /Gy /bigobj /Oi  /fp:precise /FS    /EHa /wd4127 /wd4251 /wd4324 /wd4275 /wd4512 /wd4589 /wd4819  /Zi /Ob0 /Od /RTC1
+--     C++ flags (Release):         -IC:/Softwares/miniforge3/envs/cucv/Library/include/targets/x64  /D _CRT_SECURE_NO_DEPRECATE /D _CRT_NONSTDC_NO_DEPRECATE /D _SCL_SECURE_NO_WARNINGS /Gy /bigobj /Oi  /fp:precise /FS    /EHa /wd4127 /wd4251 /wd4324 /wd4275 /wd4512 /wd4589 /wd4819  /O2 /Ob2 /DNDEBUG
+--     C++ flags (Debug):           -IC:/Softwares/miniforge3/envs/cucv/Library/include/targets/x64  /D _CRT_SECURE_NO_DEPRECATE /D _CRT_NONSTDC_NO_DEPRECATE /D _SCL_SECURE_NO_WARNINGS /Gy /bigobj /Oi  /fp:precise /FS    /EHa /wd4127 /wd4251 /wd4324 /wd4275 /wd4512 /wd4589 /wd4819  /Zi /Ob0 /Od /RTC1
 --     C Compiler:                  C:/Softwares/Microsoft/Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe
 --     C flags (Release):           /DWIN32 /D_WINDOWS /W3  /D _CRT_SECURE_NO_DEPRECATE /D _CRT_NONSTDC_NO_DEPRECATE /D _SCL_SECURE_NO_WARNINGS /Gy /bigobj /Oi  /fp:precise /FS      /O2 /Ob2 /DNDEBUG
 --     C flags (Debug):             /DWIN32 /D_WINDOWS /W3  /D _CRT_SECURE_NO_DEPRECATE /D _CRT_NONSTDC_NO_DEPRECATE /D _SCL_SECURE_NO_WARNINGS /Gy /bigobj /Oi  /fp:precise /FS    /Zi /Ob0 /Od /RTC1
@@ -58,14 +57,14 @@ mamba activate cucv
 --     Linker flags (Debug):        /machine:x64  /debug /INCREMENTAL
 --     ccache:                      NO
 --     Precompiled headers:         NO
---     Extra dependencies:          cudart_static.lib nppc.lib nppial.lib nppicc.lib nppidei.lib nppif.lib nppig.lib nppim.lib nppist.lib nppisu.lib nppitc.lib npps.lib cublas.lib cudnn.lib cufft.lib -LIBPATH:"C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.8/lib/x64"
+--     Extra dependencies:          cudart_static.lib nppc.lib nppial.lib nppicc.lib nppidei.lib nppif.lib nppig.lib nppim.lib nppist.lib nppisu.lib nppitc.lib npps.lib cublas.lib cudnn.lib cufft.lib -LIBPATH:"C:/Softwares/miniforge3/envs/cucv/Library/lib"
 --     3rdparty dependencies:
 --
 --   OpenCV modules:
---     To be built:                 aruco bgsegm bioinspired calib3d ccalib core cudaarithm cudabgsegm cudacodec cudafeatures2d cudafilters cudaimgproc cudalegacy cudaobjdetect cudaoptflow cudastereo cudawarping cudev datasets dnn dnn_objdetect dnn_superres dpm face features2d flann fuzzy gapi hfs highgui img_hash imgcodecs imgproc intensity_transform line_descriptor mcc ml objdetect optflow phase_unwrapping photo plot python3 quality rapid reg rgbd saliency shape signal stereo stitching structured_light superres surface_matching text tracking video videoio videostab wechat_qrcode xfeatures2d ximgproc xobjdetect xphoto    
+--     To be built:                 aruco bgsegm bioinspired calib3d ccalib core cudaarithm cudabgsegm cudacodec cudafeatures2d cudafilters cudaimgproc cudalegacy cudaobjdetect cudaoptflow cudastereo cudawarping cudev datasets dnn dnn_objdetect dnn_superres dpm face features2d flann fuzzy gapi hfs highgui img_hash imgcodecs imgproc intensity_transform line_descriptor mcc ml objdetect optflow phase_unwrapping photo plot python3 quality rapid reg rgbd saliency shape signal stereo stitching structured_light superres surface_matching text tracking video videoio videostab wechat_qrcode xfeatures2d ximgproc xobjdetect xphoto
 --     Disabled:                    world
 --     Disabled by dependency:      -
---     Unavailable:                 alphamat cannops cvv fastcv freetype hdf java julia matlab ovis python2 sfm ts viz        
+--     Unavailable:                 alphamat cannops cvv fastcv freetype hdf java julia matlab ovis python2 sfm ts viz
 --     Applications:                apps
 --     Documentation:               NO
 --     Non-free algorithms:         YES
@@ -126,20 +125,20 @@ mamba activate cucv
 --     NVIDIA GPU arch:             50 52 60 61 70 75 80 86 89 90 100 120
 --     NVIDIA PTX archs:            120
 --
---   cuDNN:                         YES (ver 9.8.0)
+--   cuDNN:                         YES (ver 9.14.0)
 --
 --   OpenCL:                        YES (NVD3D11)
 --     Include path:                D:/code/OpenCV/opencv-4.12.0/3rdparty/include/opencl/1.2
 --     Link libraries:              Dynamic load
 --
 --   Python 3:
---     Interpreter:                 C:\Softwares\miniforge3\envs\cucv/python.exe (ver 3.12.12)
+--     Interpreter:                 C:/Softwares/miniforge3/envs/cucv/python.exe (ver 3.12.12)
 --     Libraries:                   C:/Softwares/miniforge3/envs/cucv/libs/python312.lib (ver 3.12.12)
 --     Limited API:                 NO
---     numpy:                       C:\Softwares\miniforge3\envs\cucv/Lib/site-packages/numpy/_core/include (ver 2.4.1)       
---     install path:                C:\Softwares\miniforge3\envs\cucv/Lib/site-packages/cv2/python-3.12
+--     numpy:                       C:/Softwares/miniforge3/envs/cucv/Lib/site-packages/numpy/_core/include (ver 2.4.1)
+--     install path:                C:/Softwares/miniforge3/envs/cucv/Lib/site-packages/cv2/python-3.12        
 --
---   Python (for build):            C:\Softwares\miniforge3\envs\cucv/python.exe
+--   Python (for build):            C:/Softwares/miniforge3/envs/cucv/python.exe
 --
 --   Java:
 --     ant:                         NO
@@ -151,7 +150,7 @@ mamba activate cucv
 --   Install to:                    C:/Softwares/miniforge3/envs/cucv/Library
 -- -----------------------------------------------------------------
 --
--- Configuring done (13.4s)
+-- Configuring done (56.4s)
 -- Generating done (2.9s)
 -- Build files have been written to: D:/code/OpenCV/opencv-4.12.0/_build
 ```
