@@ -1,10 +1,10 @@
 # what is this
-用于从源码编译 **OpenCV 4.12.0** 的构建项目。官方提供的 `pip install opencv-python` 通常不包含 CUDA 支持，且 GStreamer 功能有限。
+用于从源码编译 **OpenCV 4.12.0** 的构建项目。官方提供的 `pip install opencv-python` 通常不包含 CUDA 支持，且 GStreamer 功能有限。注意 Windows 端编译 Opencv 时，会使用预编译好的 FFMPEG，但是 Linux 端则不会，且 FFMPEG>8.0 与 OpenCV 4.12.0 不兼容，注意版本！
 
 # how to use
 根据平台查看 `configure.ps1/.sh` 中的代码，默认安装的是 `python3.12 + opencv-4.12.0`，需要已下载 [Video_Codec_SDK_*.zip](https://developer.nvidia.com/video-codec-sdk/download)，放到 `CUDA_HOME = ${CONDA_PREFIX}/Library`，随后配置一下虚拟环境，注意编译期间要保持在终端在虚拟环境中：
 ```bash
-mamba create -n cucv python=3.12 numpy zlib gstreamer gst-plugins-bad gst-plugins-base gst-plugins-good gst-plugins-ugly gst-rtsp-server ffmpeg cuda-toolkit cudnn cuda-version=12.8 -c nvidia
+mamba create -n cucv python=3.12 numpy zlib gstreamer gst-plugins-bad gst-plugins-base gst-plugins-good gst-plugins-ugly gst-rtsp-server cuda-toolkit cudnn cuda-version=12.8 ffmpeg=7.1.1 -c nvidia
 mamba activate cucv
 ```
 
@@ -17,7 +17,7 @@ mamba activate cucv
 4. 检查 `OpenCV modules` 中 `To be built` 的模块，再查看 [build](#build)
 
 ## Linux
-1. 补充安装图形库 `mamba install gtk3`
+1. 补充安装图形库 `mamba install gtk3` 和运行 `export PATH=${CONDA_PREFIX}/nvvm/bin:$PATH` 导入 `cicc`
 2. 解压 `Video_Codec_SDK_*.zip`，将其中的 `./Interface` 放在 `{CONDA_PREFIX}/targets/x86_64-linux/include`、`./Lib/linux/stubs/x86_64` 放在 `{CONDA_PREFIX}/targets/x86_64-linux/lib`
 3. 赋予脚本执行权限 `chmod +x ./configure.sh`，并在终端输入 "./configure.sh
 4. 检查 `OpenCV modules` 中 `To be built` 的模块，再查看 [build](#build)
