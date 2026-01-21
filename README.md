@@ -1,10 +1,17 @@
 # what is this
-用于从源码编译 **OpenCV 4.12.0** 的构建项目。官方提供的 `pip install opencv-python` 通常不包含 CUDA 支持，且 GStreamer 功能有限。注意 Windows 端编译 Opencv 时，会使用预编译好的 FFMPEG，但是 Linux 端则不会，且 FFMPEG>8.0 与 OpenCV 4.12.0 不兼容，注意版本！
+用于从源码编译 **OpenCV** 的构建项目。官方提供的 `pip install opencv-python` 通常不包含 CUDA 支持，且 GStreamer 功能有限。注意 Windows 端编译 Opencv 时，会使用预编译好的 FFMPEG，但是 Linux 端则不会。
+
+已知问题：
+- [ ] OpenCV 4.12.0 与 FFMPEG>8.0 不兼容，可修改 mamba 命令为 ffmpeg=7.1.1
+
+编译通过：
+- [x] OpenCV 4.12.0 on Windows
+- [x] OpenCV 4.13.0 on Linux
 
 # how to use
-根据平台查看 `configure.ps1/.sh` 中的代码，默认安装的是 `python3.12 + opencv-4.12.0`，需要已下载 [Video_Codec_SDK_*.zip](https://developer.nvidia.com/video-codec-sdk/download)，放到 `CUDA_HOME = ${CONDA_PREFIX}/Library`，随后配置一下虚拟环境，注意编译期间要保持在终端在虚拟环境中：
+根据平台查看 `configure.ps1/.sh` 中的代码，默认安装的是 `python3.12 + opencv-4.12.0/4.13.0`，下载 [Video_Codec_SDK_*.zip](https://developer.nvidia.com/video-codec-sdk/download)等待使用，随后配置一下虚拟环境，注意编译期间要保持在终端在虚拟环境中：
 ```bash
-mamba create -n cucv python=3.12 numpy zlib gstreamer gst-plugins-bad gst-plugins-base gst-plugins-good gst-plugins-ugly gst-rtsp-server cuda-toolkit cudnn cuda-version=12.8 ffmpeg=7.1.1 -c nvidia
+mamba create -n cucv python=3.12 numpy zlib ffmpeg gstreamer gst-plugins-bad gst-plugins-base gst-plugins-good gst-plugins-ugly gst-rtsp-server cuda-toolkit cudnn cuda-version=12.8 -c nvidia
 mamba activate cucv
 ```
 
@@ -172,15 +179,15 @@ cmake --install _build
 
 ## Linux
 ```bash
--- General configuration for OpenCV 4.12.0 =====================================
---   Version control:               b19f977-dirty
+-- General configuration for OpenCV 4.13.0 =====================================
+--   Version control:               dbddaec-dirty
 -- 
 --   Extra modules:
---     Location (extra):            /home/tuf/codes/build_opencv/opencv_contrib-4.12.0/modules
---     Version control (extra):     b19f977-dirty
+--     Location (extra):            /home/tuf/codes/build_opencv/opencv_contrib-4.13.0/modules
+--     Version control (extra):     dbddaec-dirty
 -- 
 --   Platform:
---     Timestamp:                   2026-01-21T08:56:59Z
+--     Timestamp:                   2026-01-21T09:41:12Z
 --     Host:                        Linux 6.6.87.2-microsoft-standard-WSL2 x86_64
 --     CMake:                       3.31.6
 --     CMake generator:             Ninja
@@ -197,7 +204,7 @@ cmake --install _build
 --       AVX (9 files):             + SSSE3 SSE4_1 POPCNT SSE4_2 AVX
 --       FP16 (0 files):            + SSSE3 SSE4_1 POPCNT SSE4_2 AVX FP16
 --       AVX2 (37 files):           + SSSE3 SSE4_1 POPCNT SSE4_2 AVX FP16 AVX2 FMA3
---       AVX512_SKX (6 files):      + SSSE3 SSE4_1 POPCNT SSE4_2 AVX FP16 AVX2 FMA3 AVX_512F AVX512_COMMON AVX512_SKX
+--       AVX512_SKX (7 files):      + SSSE3 SSE4_1 POPCNT SSE4_2 AVX FP16 AVX2 FMA3 AVX_512F AVX512_COMMON AVX512_SKX
 -- 
 --   C/C++:
 --     Built as dynamic libs?:      YES
@@ -249,25 +256,25 @@ cmake --install _build
 --       avformat:                  YES (62.3.100)
 --       avutil:                    YES (60.8.100)
 --       swscale:                   YES (9.1.100)
---       avresample:                NO
+--       avdevice:                  YES (62.1.100)
 --     GStreamer:                   YES (1.26.10)
 --     v4l/v4l2:                    YES (linux/videodev2.h)
+--     Orbbec:                      YES
 -- 
 --   Parallel framework:            pthreads
 -- 
 --   Trace:                         YES (with Intel ITT(3.25.4))
 -- 
 --   Other third-party libraries:
---     Intel IPP:                   2022.1.0 [2022.1.0]
---            at:                   /home/tuf/codes/build_opencv/opencv-4.12.0/_build/3rdparty/ippicv/ippicv_lnx/icv
---     Intel IPP IW:                sources (2022.1.0)
---               at:                /home/tuf/codes/build_opencv/opencv-4.12.0/_build/3rdparty/ippicv/ippicv_lnx/iw
+--     Intel IPP:                   2022.2.0 [2022.2.0]
+--            at:                   /home/tuf/codes/build_opencv/opencv-4.13.0/_build/3rdparty/ippicv/ippicv_lnx/icv
+--     Intel IPP IW:                sources (2022.2.0)
+--               at:                /home/tuf/codes/build_opencv/opencv-4.13.0/_build/3rdparty/ippicv/ippicv_lnx/iw
 --     VA:                          YES
 --     Lapack:                      NO
 --     Eigen:                       NO
 --     Custom HAL:                  YES (ipp (ver 0.0.1))
---     Protobuf:                    build (3.19.1)
---     Flatbuffers:                 builtin/3rdparty (23.5.9)
+--     Flatbuffers:                 builtin/3rdparty (25.9.23)
 -- 
 --   NVIDIA CUDA:                   YES (ver 12.8, CUFFT CUBLAS NVCUVID NVCUVENC)
 --     NVIDIA GPU arch:             50 52 60 61 70 75 80 86 89 90 100 120
@@ -276,7 +283,7 @@ cmake --install _build
 --   cuDNN:                         YES (ver 9.14.0)
 -- 
 --   OpenCL:                        YES (INTELVA)
---     Include path:                /home/tuf/codes/build_opencv/opencv-4.12.0/3rdparty/include/opencl/1.2
+--     Include path:                /home/tuf/codes/build_opencv/opencv-4.13.0/3rdparty/include/opencl/1.2
 --     Link libraries:              Dynamic load
 -- 
 --   Python 3:
@@ -313,9 +320,9 @@ CMake Warning at cmake/OpenCVUtils.cmake:1586 (add_library):
 Call Stack (most recent call first):
   cmake/OpenCVModule.cmake:979 (ocv_add_library)
   cmake/OpenCVModule.cmake:905 (_ocv_create_module)
-  /home/tuf/codes/build_opencv/opencv_contrib-4.12.0/modules/cudacodec/CMakeLists.txt:51 (ocv_create_module)
+  /home/tuf/codes/build_opencv/opencv_contrib-4.13.0/modules/cudacodec/CMakeLists.txt:51 (ocv_create_module)
 
 
--- Generating done (0.6s)
--- Build files have been written to: /home/tuf/codes/build_opencv/opencv-4.12.0/_build
+-- Generating done (0.8s)
+-- Build files have been written to: /home/tuf/codes/build_opencv/opencv-4.13.0/_build
 ```

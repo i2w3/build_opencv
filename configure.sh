@@ -4,7 +4,7 @@ if [ -z "$CONDA_PREFIX" ]; then
 fi
 
 # 定义 opencv 版本
-OPENCV_VERSION="4.12.0"
+OPENCV_VERSION="4.13.0"
 
 # 设置代理
 export HTTP_PROXY='http://127.0.0.1:7890'
@@ -60,4 +60,6 @@ cmake -S . -G Ninja -B "_build" \
       -DPYTHON3_PACKAGES_PATH="$PYTHON_PATH/lib/python3.12/site-packages" \
       -DBUILD_TESTS=OFF \
       -DBUILD_PERF_TESTS=OFF \
-      -DBUILD_EXAMPLES=OFF
+      -DBUILD_EXAMPLES=OFF \
+      -DBUILD_PROTOBUF=OFF \
+      -DPROTOBUF_UPDATE_FILES=ON
