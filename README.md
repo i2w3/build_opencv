@@ -180,14 +180,14 @@ cmake --install _build
 ## Linux
 ```bash
 -- General configuration for OpenCV 4.13.0 =====================================
---   Version control:               dbddaec-dirty
+--   Version control:               f73dba5-dirty
 -- 
 --   Extra modules:
 --     Location (extra):            /home/tuf/codes/build_opencv/opencv_contrib-4.13.0/modules
---     Version control (extra):     dbddaec-dirty
+--     Version control (extra):     f73dba5-dirty
 -- 
 --   Platform:
---     Timestamp:                   2026-01-21T09:41:12Z
+--     Timestamp:                   2026-01-21T11:31:40Z
 --     Host:                        Linux 6.6.87.2-microsoft-standard-WSL2 x86_64
 --     CMake:                       3.31.6
 --     CMake generator:             Ninja
@@ -288,7 +288,7 @@ cmake --install _build
 -- 
 --   Python 3:
 --     Interpreter:                 /home/tuf/miniforge3/envs/cucv/bin/python (ver 3.12.12)
---     Libraries:                   /home/tuf/miniforge3/envs/cucv/libs/libpython3.12.so
+--     Libraries:                   /home/tuf/miniforge3/envs/cucv/libs/libpython3.12.so (ver 3.12.12)
 --     Limited API:                 NO
 --     numpy:                       /home/tuf/miniforge3/envs/cucv/lib/python3.12/site-packages/numpy/_core/include (ver 2.4.1)
 --     install path:                /home/tuf/miniforge3/envs/cucv/lib/python3.12/site-packages/cv2/python-3.12
@@ -305,7 +305,7 @@ cmake --install _build
 --   Install to:                    /home/tuf/miniforge3/envs/cucv
 -- -----------------------------------------------------------------
 -- 
--- Configuring done (20.3s)
+-- Configuring done (23.1s)
 CMake Warning at cmake/OpenCVUtils.cmake:1586 (add_library):
   Cannot generate a safe runtime search path for target opencv_cudacodec
   because files in some directories may conflict with libraries in implicit
@@ -323,6 +323,6 @@ Call Stack (most recent call first):
   /home/tuf/codes/build_opencv/opencv_contrib-4.13.0/modules/cudacodec/CMakeLists.txt:51 (ocv_create_module)
 
 
--- Generating done (0.8s)
+-- Generating done (0.9s)
 -- Build files have been written to: /home/tuf/codes/build_opencv/opencv-4.13.0/_build
 ```

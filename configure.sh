@@ -53,7 +53,7 @@ cmake -S . -G Ninja -B "_build" \
       -DBUILD_opencv_python_bindings_generator=ON \
       -DBUILD_PYTHON3_VERSION=ON \
       -DBUILD_FORCE_PYTHON_LIBS=ON \
-      -DPYTHON3_INCLUDE_DIR="$PYTHON_PATH/include" \
+      -DPYTHON3_INCLUDE_DIR="$PYTHON_PATH/include/python3.12" \
       -DPYTHON3_LIBRARY="$PYTHON_PATH/libs/libpython3.12.so" \
       -DPYTHON3_EXECUTABLE="$PYTHON_PATH/bin/python" \
       -DPYTHON3_NUMPY_INCLUDE_DIRS="$PYTHON_PATH/lib/python3.12/site-packages/numpy/_core/include" \
