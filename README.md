@@ -4,7 +4,7 @@
 # how to use
 根据平台查看 `configure.ps1/.sh` 中的代码，默认安装的是 `python3.12 + opencv-4.12.0`，需要已下载 [Video_Codec_SDK_*.zip](https://developer.nvidia.com/video-codec-sdk/download)，放到 `CUDA_HOME = ${CONDA_PREFIX}/Library`，随后配置一下虚拟环境，注意编译期间要保持在终端在虚拟环境中：
 ```bash
-mamba create -n cucv python=3.12 numpy gstreamer gst-plugins-bad gst-plugins-base gst-plugins-good gst-plugins-ugly gst-rtsp-server ffmepg cuda-toolkit cudnn cuda-version=12.8 -c nvidia
+mamba create -n cucv python=3.12 numpy zlib gstreamer gst-plugins-bad gst-plugins-base gst-plugins-good gst-plugins-ugly gst-rtsp-server ffmpeg cuda-toolkit cudnn cuda-version=12.8 -c nvidia
 mamba activate cucv
 ```
 
@@ -12,9 +12,24 @@ mamba activate cucv
 ## Windows
 0. 修改 `configure.ps1`，将路径修改为 `msvc` 的安装路径
 1. 关闭 Windows 安全中心中的病毒和威胁防护
-2. 解压 `Video_Codec_SDK_*.zip`，将其中的 `./Interface` 放在 `{CUDA_HOME}/include`、`./Lib/win` 放在 `{CUDA_HOME}/lib`
+2. 解压 `Video_Codec_SDK_*.zip`，将其中的 `./Interface` 放在 `{CONDA_PREFIX}/include`、`./Lib/win/x64` 放在 `{CONDA_PREFIX}/lib`
 3. 右键 `configure.ps1` 选择 `使用 PowerShell 运行` 或者在终端输入 "./configure.ps1"
 4. 检查 `OpenCV modules` 中 `To be built` 的模块，再查看 [build](#build)
+
+## Linux
+1. 补充安装图形库 `mamba install gtk3`
+2. 解压 `Video_Codec_SDK_*.zip`，将其中的 `./Interface` 放在 `{CONDA_PREFIX}/targets/x86_64-linux/include`、`./Lib/linux/stubs/x86_64` 放在 `{CONDA_PREFIX}/targets/x86_64-linux/lib`
+3. 赋予脚本执行权限 `chmod +x ./configure.sh`，并在终端输入 "./configure.sh
+4. 检查 `OpenCV modules` 中 `To be built` 的模块，再查看 [build](#build)
+
+# build
+```bash
+cmake --build _build --parallel
+cmake --install _build
+```
+
+# log
+## Windows
 ```powershell
 -- General configuration for OpenCV 4.12.0 =====================================
 --   Version control:               82b1b5f-dirty
@@ -156,10 +171,151 @@ mamba activate cucv
 ```
 
 ## Linux
-TOOD
-
-# build
 ```bash
-cmake --build _build --parallel
-cmake --install _build
+-- General configuration for OpenCV 4.12.0 =====================================
+--   Version control:               b19f977-dirty
+-- 
+--   Extra modules:
+--     Location (extra):            /home/tuf/codes/build_opencv/opencv_contrib-4.12.0/modules
+--     Version control (extra):     b19f977-dirty
+-- 
+--   Platform:
+--     Timestamp:                   2026-01-21T08:56:59Z
+--     Host:                        Linux 6.6.87.2-microsoft-standard-WSL2 x86_64
+--     CMake:                       3.31.6
+--     CMake generator:             Ninja
+--     CMake build tool:            /usr/bin/ninja
+--     Configuration:               Release
+--     Algorithm Hint:              ALGO_HINT_ACCURATE
+-- 
+--   CPU/HW features:
+--     Baseline:                    SSE SSE2 SSE3
+--       requested:                 SSE3
+--     Dispatched code generation:  SSE4_1 SSE4_2 AVX FP16 AVX2 AVX512_SKX
+--       SSE4_1 (17 files):         + SSSE3 SSE4_1
+--       SSE4_2 (1 files):          + SSSE3 SSE4_1 POPCNT SSE4_2
+--       AVX (9 files):             + SSSE3 SSE4_1 POPCNT SSE4_2 AVX
+--       FP16 (0 files):            + SSSE3 SSE4_1 POPCNT SSE4_2 AVX FP16
+--       AVX2 (37 files):           + SSSE3 SSE4_1 POPCNT SSE4_2 AVX FP16 AVX2 FMA3
+--       AVX512_SKX (6 files):      + SSSE3 SSE4_1 POPCNT SSE4_2 AVX FP16 AVX2 FMA3 AVX_512F AVX512_COMMON AVX512_SKX
+-- 
+--   C/C++:
+--     Built as dynamic libs?:      YES
+--     C++ standard:                11
+--     C++ Compiler:                /home/tuf/miniforge3/envs/cucv/bin/x86_64-conda-linux-gnu-c++  (ver 13.4.0)
+--     C++ flags (Release):         -I/home/tuf/miniforge3/envs/cucv/targets/x86_64-linux/include   -fsigned-char -W -Wall -Wreturn-type -Wnon-virtual-dtor -Waddress -Wsequence-point -Wformat -Wformat-security -Wmissing-declarations -Wundef -Winit-self -Wpointer-arith -Wshadow -Wsign-promo -Wuninitialized -Wsuggest-override -Wno-delete-non-virtual-dtor -Wno-comment -Wimplicit-fallthrough=3 -Wno-strict-overflow -fdiagnostics-show-option -pthread -fomit-frame-pointer -ffunction-sections -fdata-sections  -msse3 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -DNDEBUG  -DNDEBUG
+--     C++ flags (Debug):           -I/home/tuf/miniforge3/envs/cucv/targets/x86_64-linux/include   -fsigned-char -W -Wall -Wreturn-type -Wnon-virtual-dtor -Waddress -Wsequence-point -Wformat -Wformat-security -Wmissing-declarations -Wundef -Winit-self -Wpointer-arith -Wshadow -Wsign-promo -Wuninitialized -Wsuggest-override -Wno-delete-non-virtual-dtor -Wno-comment -Wimplicit-fallthrough=3 -Wno-strict-overflow -fdiagnostics-show-option -pthread -fomit-frame-pointer -ffunction-sections -fdata-sections  -msse3 -fvisibility=hidden -fvisibility-inlines-hidden -g  -O0 -DDEBUG -D_DEBUG
+--     C Compiler:                  /home/tuf/miniforge3/envs/cucv/bin/x86_64-conda-linux-gnu-cc
+--     C flags (Release):           -march=nocona -mtune=haswell -ftree-vectorize -fPIC -fstack-protector-strong -fno-plt -O2 -ffunction-sections -pipe -isystem /home/tuf/miniforge3/envs/cucv/include  -I/home/tuf/miniforge3/envs/cucv/targets/x86_64-linux/include  -L/home/tuf/miniforge3/envs/cucv/targets/x86_64-linux/lib -L/home/tuf/miniforge3/envs/cucv/targets/x86_64-linux/lib/stubs   -fsigned-char -W -Wall -Wreturn-type -Waddress -Wsequence-point -Wformat -Wformat-security -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wundef -Winit-self -Wpointer-arith -Wshadow -Wuninitialized -Wno-comment -Wimplicit-fallthrough=3 -Wno-strict-overflow -fdiagnostics-show-option -pthread -fomit-frame-pointer -ffunction-sections -fdata-sections  -msse3 -fvisibility=hidden -O3 -DNDEBUG  -DNDEBUG
+--     C flags (Debug):             -march=nocona -mtune=haswell -ftree-vectorize -fPIC -fstack-protector-strong -fno-plt -O2 -ffunction-sections -pipe -isystem /home/tuf/miniforge3/envs/cucv/include  -I/home/tuf/miniforge3/envs/cucv/targets/x86_64-linux/include  -L/home/tuf/miniforge3/envs/cucv/targets/x86_64-linux/lib -L/home/tuf/miniforge3/envs/cucv/targets/x86_64-linux/lib/stubs   -fsigned-char -W -Wall -Wreturn-type -Waddress -Wsequence-point -Wformat -Wformat-security -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wundef -Winit-self -Wpointer-arith -Wshadow -Wuninitialized -Wno-comment -Wimplicit-fallthrough=3 -Wno-strict-overflow -fdiagnostics-show-option -pthread -fomit-frame-pointer -ffunction-sections -fdata-sections  -msse3 -fvisibility=hidden -g  -O0 -DDEBUG -D_DEBUG
+--     Linker flags (Release):      -Wl,--exclude-libs,libippicv.a -Wl,--exclude-libs,libippiw.a -Wl,-O2 -Wl,--sort-common -Wl,--as-needed -Wl,-z,relro -Wl,-z,now -Wl,--disable-new-dtags -Wl,--gc-sections -Wl,--allow-shlib-undefined -Wl,-rpath,/home/tuf/miniforge3/envs/cucv/lib -Wl,-rpath-link,/home/tuf/miniforge3/envs/cucv/lib -L/home/tuf/miniforge3/envs/cucv/lib  -L/home/tuf/miniforge3/envs/cucv/targets/x86_64-linux/lib -L/home/tuf/miniforge3/envs/cucv/targets/x86_64-linux/lib/stubs  -Wl,--gc-sections -Wl,--as-needed -Wl,--no-undefined  
+--     Linker flags (Debug):        -Wl,--exclude-libs,libippicv.a -Wl,--exclude-libs,libippiw.a -Wl,-O2 -Wl,--sort-common -Wl,--as-needed -Wl,-z,relro -Wl,-z,now -Wl,--disable-new-dtags -Wl,--gc-sections -Wl,--allow-shlib-undefined -Wl,-rpath,/home/tuf/miniforge3/envs/cucv/lib -Wl,-rpath-link,/home/tuf/miniforge3/envs/cucv/lib -L/home/tuf/miniforge3/envs/cucv/lib  -L/home/tuf/miniforge3/envs/cucv/targets/x86_64-linux/lib -L/home/tuf/miniforge3/envs/cucv/targets/x86_64-linux/lib/stubs  -Wl,--gc-sections -Wl,--as-needed -Wl,--no-undefined  
+--     ccache:                      NO
+--     Precompiled headers:         NO
+--     Extra dependencies:          m pthread cudart_static dl rt nppc nppial nppicc nppidei nppif nppig nppim nppist nppisu nppitc npps cublas cudnn cufft -L/home/tuf/miniforge3/envs/cucv/targets/x86_64-linux/lib -L/home/tuf/miniforge3/envs/cucv/x86_64-conda-linux-gnu/sysroot/usr/lib -L/home/tuf/miniforge3/envs/cucv/lib
+--     3rdparty dependencies:
+-- 
+--   OpenCV modules:
+--     To be built:                 aruco bgsegm bioinspired calib3d ccalib core cudaarithm cudabgsegm cudacodec cudafeatures2d cudafilters cudaimgproc cudalegacy cudaobjdetect cudaoptflow cudastereo cudawarping cudev datasets dnn dnn_objdetect dnn_superres dpm face features2d flann freetype fuzzy gapi hfs highgui img_hash imgcodecs imgproc intensity_transform line_descriptor mcc ml objdetect optflow phase_unwrapping photo plot python3 quality rapid reg rgbd saliency shape signal stereo stitching structured_light superres surface_matching text tracking video videoio videostab wechat_qrcode xfeatures2d ximgproc xobjdetect xphoto
+--     Disabled:                    world
+--     Disabled by dependency:      -
+--     Unavailable:                 alphamat cannops cvv fastcv hdf java julia matlab ovis python2 sfm ts viz
+--     Applications:                apps
+--     Documentation:               NO
+--     Non-free algorithms:         YES
+-- 
+--   GUI:                           NONE
+--     GTK+:                        NO
+--     VTK support:                 NO
+-- 
+--   Media I/O: 
+--     ZLib:                        /home/tuf/miniforge3/envs/cucv/lib/libz.so (ver 1.3.1)
+--     JPEG:                        /home/tuf/miniforge3/envs/cucv/lib/libjpeg.so (ver 80)
+--     WEBP:                        /home/tuf/miniforge3/envs/cucv/lib/libwebp.so (ver decoder: 0x0210, encoder: 0x0210, demux: 0x0107)
+--     AVIF:                        NO
+--     PNG:                         /home/tuf/miniforge3/envs/cucv/lib/libpng.so (ver 1.6.54)
+--     TIFF:                        /home/tuf/miniforge3/envs/cucv/lib/libtiff.so (ver 42 / 4.7.1)
+--     JPEG 2000:                   build (ver 2.5.3)
+--     OpenEXR:                     build (ver 2.3.0)
+--     GIF:                         YES
+--     HDR:                         YES
+--     SUNRASTER:                   YES
+--     PXM:                         YES
+--     PFM:                         YES
+-- 
+--   Video I/O:
+--     FFMPEG:                      YES
+--       avcodec:                   YES (62.11.100)
+--       avformat:                  YES (62.3.100)
+--       avutil:                    YES (60.8.100)
+--       swscale:                   YES (9.1.100)
+--       avresample:                NO
+--     GStreamer:                   YES (1.26.10)
+--     v4l/v4l2:                    YES (linux/videodev2.h)
+-- 
+--   Parallel framework:            pthreads
+-- 
+--   Trace:                         YES (with Intel ITT(3.25.4))
+-- 
+--   Other third-party libraries:
+--     Intel IPP:                   2022.1.0 [2022.1.0]
+--            at:                   /home/tuf/codes/build_opencv/opencv-4.12.0/_build/3rdparty/ippicv/ippicv_lnx/icv
+--     Intel IPP IW:                sources (2022.1.0)
+--               at:                /home/tuf/codes/build_opencv/opencv-4.12.0/_build/3rdparty/ippicv/ippicv_lnx/iw
+--     VA:                          YES
+--     Lapack:                      NO
+--     Eigen:                       NO
+--     Custom HAL:                  YES (ipp (ver 0.0.1))
+--     Protobuf:                    build (3.19.1)
+--     Flatbuffers:                 builtin/3rdparty (23.5.9)
+-- 
+--   NVIDIA CUDA:                   YES (ver 12.8, CUFFT CUBLAS NVCUVID NVCUVENC)
+--     NVIDIA GPU arch:             50 52 60 61 70 75 80 86 89 90 100 120
+--     NVIDIA PTX archs:            120
+-- 
+--   cuDNN:                         YES (ver 9.14.0)
+-- 
+--   OpenCL:                        YES (INTELVA)
+--     Include path:                /home/tuf/codes/build_opencv/opencv-4.12.0/3rdparty/include/opencl/1.2
+--     Link libraries:              Dynamic load
+-- 
+--   Python 3:
+--     Interpreter:                 /home/tuf/miniforge3/envs/cucv/bin/python (ver 3.12.12)
+--     Libraries:                   /home/tuf/miniforge3/envs/cucv/libs/libpython3.12.so
+--     Limited API:                 NO
+--     numpy:                       /home/tuf/miniforge3/envs/cucv/lib/python3.12/site-packages/numpy/_core/include (ver 2.4.1)
+--     install path:                /home/tuf/miniforge3/envs/cucv/lib/python3.12/site-packages/cv2/python-3.12
+-- 
+--   Python (for build):            /home/tuf/miniforge3/envs/cucv/bin/python
+-- 
+--   Java:                          
+--     ant:                         NO
+--     Java:                        NO
+--     JNI:                         NO
+--     Java wrappers:               NO
+--     Java tests:                  NO
+-- 
+--   Install to:                    /home/tuf/miniforge3/envs/cucv
+-- -----------------------------------------------------------------
+-- 
+-- Configuring done (20.3s)
+CMake Warning at cmake/OpenCVUtils.cmake:1586 (add_library):
+  Cannot generate a safe runtime search path for target opencv_cudacodec
+  because files in some directories may conflict with libraries in implicit
+  directories:
+
+    runtime library [libnvcuvid.so.1] in /home/tuf/miniforge3/envs/cucv/targets/x86_64-linux/lib may be hidden by files in:
+      /usr/lib/wsl/lib
+    runtime library [libnvidia-encode.so.1] in /home/tuf/miniforge3/envs/cucv/targets/x86_64-linux/lib may be hidden by files in:
+      /usr/lib/wsl/lib
+
+  Some of these libraries may not be found correctly.
+Call Stack (most recent call first):
+  cmake/OpenCVModule.cmake:979 (ocv_add_library)
+  cmake/OpenCVModule.cmake:905 (_ocv_create_module)
+  /home/tuf/codes/build_opencv/opencv_contrib-4.12.0/modules/cudacodec/CMakeLists.txt:51 (ocv_create_module)
+
+
+-- Generating done (0.6s)
+-- Build files have been written to: /home/tuf/codes/build_opencv/opencv-4.12.0/_build
 ```
